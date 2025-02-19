@@ -122,6 +122,7 @@ class OnLanePlanning : public PlanningBase {
   bool wait_flag_ = true;
   bool routing_in_flag_ = true;
   common::PointENU dead_end_point_;
+  int frame_cnt_ = 0;
 };
 
 }  // namespace planning
