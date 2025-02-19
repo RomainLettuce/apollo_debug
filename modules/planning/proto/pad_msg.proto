@@ -11,6 +11,9 @@ enum DrivingAction {
   PULL_OVER = 3;
   STOP = 4;
   RESUME_CRUISE = 5;
+  COVERAGE = 6;
+  START_CASE = 7;
+  END_CASE = 8;
 };
 
 message PadMessage {
@@ -18,4 +21,5 @@ message PadMessage {
 
   // driving action
   optional DrivingAction action = 2;
+  optional string data = 3;
 }

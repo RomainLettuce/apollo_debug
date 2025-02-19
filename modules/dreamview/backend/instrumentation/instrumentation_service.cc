@@ -155,6 +155,34 @@ void InstrumentationService::RegisterMessageHandlers()
                         pad_msg_writer_->Write(pad_msg);
                 });
         instrumentation_ws_->RegisterMessageHandler(
+                "RequestDumpCoverage",
+                [this](const Json &json, WebSocketHandler::Connection *conn) {
+                        PadMessage pad_msg;
+                        pad_msg.set_action(DrivingAction::COVERAGE);
+                        pad_msg_writer_->Write(pad_msg);
+                });
+        instrumentation_ws_->RegisterMessageHandler(
+                "RequestStartCase",
+                [this](const Json &json, WebSocketHandler::Connection *conn) {
+                        std::string filename;
+                        if (!json.contains("name")) {
+                                AERROR << "Failed to get a input filename.";
+                                return;
+                        }
+                        filename = json["name"];
+                        PadMessage pad_msg;
+                        pad_msg.set_action(DrivingAction::START_CASE);
+                        pad_msg.set_data(filename);
+                        pad_msg_writer_->Write(pad_msg);
+                });
+        instrumentation_ws_->RegisterMessageHandler(
+                "RequestEndCase",
+                [this](const Json &json, WebSocketHandler::Connection *conn) {
+                        PadMessage pad_msg;
+                        pad_msg.set_action(DrivingAction::END_CASE);
+                        pad_msg_writer_->Write(pad_msg);
+                });
+        instrumentation_ws_->RegisterMessageHandler(
                 "RequestPlanningReset",
                 [this](const Json &json, WebSocketHandler::Connection *conn) {
                         std::string query_command = "pgrep -a mainboard | grep planning";

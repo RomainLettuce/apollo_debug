@@ -27,6 +27,8 @@
 #include "modules/planning/navi_planning.h"
 #include "modules/planning/on_lane_planning.h"
 
+#include "modules/common/instrumentation_logger/instrumentation_logger.h"
+
 namespace apollo {
 namespace planning {
 
@@ -37,6 +39,8 @@ using apollo::relative_map::MapMsg;
 using apollo::routing::RoutingRequest;
 using apollo::routing::RoutingResponse;
 using apollo::storytelling::Stories;
+
+auto logger = common::InstrumentationLogger::getInstance();
 
 bool PlanningComponent::Init() {
   injector_ = std::make_shared<DependencyInjector>();
@@ -84,6 +88,14 @@ bool PlanningComponent::Init() {
         ADEBUG << "Received pad data: run pad callback.";
         std::lock_guard<std::mutex> lock(mutex_);
         pad_msg_.CopyFrom(*pad_msg);
+        if (pad_msg_.has_action() && pad_msg_.has_data() && pad_msg_.action() == DrivingAction::START_CASE) {
+          ADEBUG << "A Case Started.";
+          logger->setFileName(pad_msg_.data());
+        }
+        if (pad_msg_.has_action() && pad_msg_.action() == DrivingAction::END_CASE) {
+          ADEBUG << "A Case Ended.";
+          logger->dumpToFile();
+        }
       });
 
   story_telling_reader_ = node_->CreateReader<Stories>(

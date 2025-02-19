@@ -45,6 +45,8 @@
 #include "modules/routing/proto/routing.pb.h"
 #include "modules/planning/proto/planning_debug.pb.h"
 
+#include "modules/common/instrumentation_logger/instrumentation_logger.h"
+
 namespace apollo {
 namespace planning {
 using apollo::canbus::Chassis;
@@ -65,6 +67,8 @@ using apollo::routing::RoutingRequest;
 using apollo::hdmap::JunctionInfoConstPtr;
 using apollo::common::math::Polygon2d;
 using apollo::common::PointENU;
+
+auto logger = common::InstrumentationLogger::getInstance();
 
 OnLanePlanning::~OnLanePlanning() {
   if (reference_line_provider_) {
@@ -260,6 +264,7 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
                              ADCTrajectory* const ptr_trajectory_pb) {
   // when rerouting, reference line might not be updated. In this case, planning
   // module maintains not-ready until be restarted.
+  frame_cnt_++;
   static bool failed_to_update_reference_line = false;
   local_view_ = local_view;
   const double start_timestamp = Clock::NowInSeconds();
@@ -472,6 +477,9 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
       planning_smoother_.Smooth(injector_->frame_history(), frame_.get(),
                                 ptr_trajectory_pb);
     }
+  }
+  if (frame_cnt_ % 5 == 0) {
+    logger->dumpToFile();
   }
 
   // reference line recovery only one frame
