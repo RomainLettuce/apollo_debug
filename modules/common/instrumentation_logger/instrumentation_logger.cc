@@ -39,10 +39,9 @@ void InstrumentationLogger::dumpToFile() {
     
     for (const auto& cycle : cycles) {
         for (const auto& entry : cycle.entries) {
-            file << entry.message << " [+" 
-                    << (entry.timestamp - cycle.cycleStartTime) << "ms]\n";
+            file << entry.message << "\n";
         }
-        file << "---------\n";
+        file << "--\n";
     }
 
     cycles.clear();
