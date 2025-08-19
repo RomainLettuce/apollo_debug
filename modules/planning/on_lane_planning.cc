@@ -46,6 +46,7 @@
 #include "modules/planning/proto/planning_debug.pb.h"
 
 #include "modules/common/instrumentation_logger/instrumentation_logger.h"
+#include "modules/common/instrumentation_logger/instrumentation_collector.h"
 
 namespace apollo {
 namespace planning {
@@ -264,6 +265,7 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
                              ADCTrajectory* const ptr_trajectory_pb) {
   // when rerouting, reference line might not be updated. In this case, planning
   // module maintains not-ready until be restarted.
+  INSTR_NEW_FRAME(frame_cnt_);
   frame_cnt_++;
   static bool failed_to_update_reference_line = false;
   local_view_ = local_view;
@@ -481,6 +483,8 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   if (frame_cnt_ % 5 == 0) {
     logger->dumpToFile();
   }
+  INSTR_DUMP_FRAME();
+  INSTR_RESET();
 
   // reference line recovery only one frame
   // bool complete_dead_end =

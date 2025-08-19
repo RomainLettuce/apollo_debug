@@ -10,4 +10,13 @@ cc_library(
     deps = [],
 )
 
+cc_library(
+    name = "instrumentation_collector",
+    srcs = ["instrumentation_collector.cc"],
+    hdrs = ["instrumentation_collector.h"],
+    deps = ["//cyber/common:file",
+            "//modules/common/instrumentation_logger/proto:coverage_cc_proto",
+    ],
+)
+
 cpplint()
