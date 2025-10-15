@@ -18,6 +18,7 @@
  * @file
  **/
 
+#include "modules/common/instrumentation_logger/dumper.h"
 #include "modules/planning/tasks/optimizers/path_optimizer.h"
 
 #include <memory>
@@ -43,6 +44,7 @@ Status PathOptimizer::Execute(Frame* frame,
       reference_line_info->speed_data(), reference_line_info->reference_line(),
       frame->PlanningStartPoint(), reference_line_info->path_reusable(),
       reference_line_info->mutable_path_data());
+  DUMP_SET_PATH_OPT_FAILURE(!ret.ok());
   RecordDebugInfo(reference_line_info->path_data());
   if (ret != Status::OK()) {
     reference_line_info->SetDrivable(false);

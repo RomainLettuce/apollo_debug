@@ -26,6 +26,7 @@ cc_library(
         "//modules/common/util:message_util",
         "//modules/common/instrumentation_logger:instrumentation_logger",
         "//modules/common/instrumentation_logger:instrumentation_collector",
+        "//modules/common/instrumentation_logger:dumper",
         "//modules/localization/proto:localization_cc_proto",
         "//modules/map/relative_map/proto:navigation_cc_proto",
         "//modules/perception/proto:traffic_light_detection_cc_proto",
@@ -99,6 +100,7 @@ cc_library(
         "//cyber/common:log",
         "//modules/common/instrumentation_logger:instrumentation_logger",
         "//modules/common/instrumentation_logger:instrumentation_collector",
+        "//modules/common/instrumentation_logger:dumper",
         "//modules/planning/learning_based/img_feature_renderer:birdview_img_feature_renderer",
     ],
 )

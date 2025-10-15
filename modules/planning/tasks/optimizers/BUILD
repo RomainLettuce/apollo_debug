@@ -16,6 +16,7 @@ cc_library(
         "//modules/planning/common/path:path_data",
         "//modules/planning/common/speed:speed_data",
         "//modules/planning/tasks:task",
+        "//modules/common/instrumentation_logger:dumper",
         "@eigen",
     ],
 )
@@ -35,6 +36,7 @@ cc_library(
         "//modules/planning/common/path:path_data",
         "//modules/planning/common/speed:speed_data",
         "//modules/planning/tasks:task",
+        "//modules/common/instrumentation_logger:dumper",
         "@eigen",
     ],
 )

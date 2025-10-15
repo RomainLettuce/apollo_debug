@@ -29,6 +29,7 @@
 
 #include "modules/common/instrumentation_logger/instrumentation_logger.h"
 #include "modules/common/instrumentation_logger/instrumentation_collector.h"
+#include "modules/common/instrumentation_logger/dumper.h"
 
 namespace apollo {
 namespace planning {
@@ -93,12 +94,15 @@ bool PlanningComponent::Init() {
           ADEBUG << "A Case Started.";
           logger->setFileName(pad_msg_.data());
           INSTR_INIT(pad_msg_.data());
+          DUMP_INIT(pad_msg_.data());
         }
         if (pad_msg_.has_action() && pad_msg_.action() == DrivingAction::END_CASE) {
           ADEBUG << "A Case Ended.";
           logger->dumpToFile();
           INSTR_DUMP_FRAME();
+          DUMP_DUMP_FRAME();
           INSTR_RESET();
+          DUMP_RESET();
         }
       });
 

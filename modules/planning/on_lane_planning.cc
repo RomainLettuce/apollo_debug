@@ -47,6 +47,7 @@
 
 #include "modules/common/instrumentation_logger/instrumentation_logger.h"
 #include "modules/common/instrumentation_logger/instrumentation_collector.h"
+#include "modules/common/instrumentation_logger/dumper.h"
 
 namespace apollo {
 namespace planning {
@@ -266,6 +267,7 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   // when rerouting, reference line might not be updated. In this case, planning
   // module maintains not-ready until be restarted.
   INSTR_NEW_FRAME(frame_cnt_);
+  DUMP_NEW_FRAME(frame_cnt_);
   frame_cnt_++;
   static bool failed_to_update_reference_line = false;
   local_view_ = local_view;
@@ -480,11 +482,15 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
                                 ptr_trajectory_pb);
     }
   }
+  DUMP_SET_CORE(*local_view_.routing, *injector_->planning_context()->mutable_planning_status(),
+                *ptr_trajectory_pb);
   if (frame_cnt_ % 5 == 0) {
     logger->dumpToFile();
   }
   INSTR_DUMP_FRAME();
   INSTR_RESET();
+  DUMP_DUMP_FRAME();
+  DUMP_RESET();
 
   // reference line recovery only one frame
   // bool complete_dead_end =

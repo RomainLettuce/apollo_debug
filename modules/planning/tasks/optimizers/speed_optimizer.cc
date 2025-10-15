@@ -19,6 +19,7 @@
  **/
 
 #include "modules/planning/tasks/optimizers/speed_optimizer.h"
+#include "modules/common/instrumentation_logger/dumper.h"
 
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/common/speed_limit.h"
@@ -38,6 +39,7 @@ Status SpeedOptimizer::Execute(Frame* frame,
   auto ret =
       Process(reference_line_info->path_data(), frame->PlanningStartPoint(),
               reference_line_info->mutable_speed_data());
+  DUMP_SET_SPEED_OPT_FAILURE(!ret.ok());
 
   RecordDebugInfo(reference_line_info->speed_data());
   return ret;
