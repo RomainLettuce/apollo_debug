@@ -24,7 +24,6 @@ cc_library(
         "//cyber",
         "//modules/common/adapters:adapter_gflags",
         "//modules/common/util:message_util",
-        "//modules/common/instrumentation_logger:instrumentation_logger",
         "//modules/common/instrumentation_logger:instrumentation_collector",
         "//modules/common/instrumentation_logger:dumper",
         "//modules/localization/proto:localization_cc_proto",
@@ -98,7 +97,6 @@ cc_library(
     deps = [
         ":planning_base",
         "//cyber/common:log",
-        "//modules/common/instrumentation_logger:instrumentation_logger",
         "//modules/common/instrumentation_logger:instrumentation_collector",
         "//modules/common/instrumentation_logger:dumper",
         "//modules/planning/learning_based/img_feature_renderer:birdview_img_feature_renderer",

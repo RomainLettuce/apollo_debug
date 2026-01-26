@@ -45,7 +45,6 @@
 #include "modules/routing/proto/routing.pb.h"
 #include "modules/planning/proto/planning_debug.pb.h"
 
-#include "modules/common/instrumentation_logger/instrumentation_logger.h"
 #include "modules/common/instrumentation_logger/instrumentation_collector.h"
 #include "modules/common/instrumentation_logger/dumper.h"
 
@@ -69,8 +68,6 @@ using apollo::routing::RoutingRequest;
 using apollo::hdmap::JunctionInfoConstPtr;
 using apollo::common::math::Polygon2d;
 using apollo::common::PointENU;
-
-auto logger = common::InstrumentationLogger::getInstance();
 
 OnLanePlanning::~OnLanePlanning() {
   if (reference_line_provider_) {
@@ -321,6 +318,10 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
     ptr_trajectory_pb->set_gear(canbus::Chassis::GEAR_DRIVE);
     FillPlanningPb(start_timestamp, ptr_trajectory_pb);
     GenerateStopTrajectory(ptr_trajectory_pb);
+    INSTR_DUMP_FRAME();
+    INSTR_RESET();
+    DUMP_DUMP_FRAME();
+    DUMP_RESET();
     return;
   }
 
@@ -353,6 +354,10 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
     ptr_trajectory_pb->set_gear(canbus::Chassis::GEAR_DRIVE);
     FillPlanningPb(start_timestamp, ptr_trajectory_pb);
     GenerateStopTrajectory(ptr_trajectory_pb);
+    INSTR_DUMP_FRAME();
+    INSTR_RESET();
+    DUMP_DUMP_FRAME();
+    DUMP_RESET();
     return;
   }
   // Update reference line provider and reset pull over if necessary
@@ -412,6 +417,10 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
     frame_->reference_line_info_clear();
     // const uint32_t n = frame_->SequenceNum();
     // injector_->frame_history()->Add(n, std::move(frame_));
+    INSTR_DUMP_FRAME();
+    INSTR_RESET();
+    DUMP_DUMP_FRAME();
+    DUMP_RESET();
     return;
   }
 
@@ -484,9 +493,6 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   }
   DUMP_SET_CORE(*local_view_.routing, *injector_->planning_context()->mutable_planning_status(),
                 *ptr_trajectory_pb);
-  if (frame_cnt_ % 5 == 0) {
-    logger->dumpToFile();
-  }
   INSTR_DUMP_FRAME();
   INSTR_RESET();
   DUMP_DUMP_FRAME();
